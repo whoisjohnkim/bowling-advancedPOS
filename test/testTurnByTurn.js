@@ -53,6 +53,7 @@ const calculateScore = (arr) => {
                     score[i - 1] += frameScore;
                 }
                 strike = true;
+                spare = false;
             }
             // Case: Spare or Open Frame
             else{
