@@ -30,8 +30,10 @@ const calculateScore = (arr) => {
     let score = 0;
     arr.forEach((frame, i) => {
         let frameScore = 0;
+
         // Only score 10 frames
         if(i < 10){
+
             // Case: Strike
             //       Score of frame is 10 + value of next two throws
             if(frame[0] === 'X' || returnValue(frame[0]) === 10){
@@ -49,12 +51,14 @@ const calculateScore = (arr) => {
                     frameScore += returnValue(nextFrame[0]) + returnValue(nextFrame[1]);
                 }
             }
+
             // Case: Spare
             //       Score of frame is 10 + value of next throw
             else if(frame[1] === '/' || returnValue(frame[0]) + returnValue(frame[1]) === 10){
                 frameScore += 10;
                 frameScore += returnValue(arr[i + 1][0]);
             }
+
             // Case: Open Frame
             //       Score of frame is total pins for the frame
             else {
