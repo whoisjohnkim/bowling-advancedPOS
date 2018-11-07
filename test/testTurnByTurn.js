@@ -88,14 +88,26 @@ const calculateScore = (arr) => {
                 strike = false;
                 twoStrikes = false;
             }
+
+            // Push onto score array only if the first 10 frames
             if(i < 10){
                 score.push(frameScore);
             }
         }
-        // If it's the 3rd throw in the 10th frame
+        // Case: 3rd throw in the 10th frame
         else{
             score[i - 2] += returnValue(frame[0]);
         }
+
+        /////////////////////////////////////////////////////////////////
+        // If you wanted to keep updated score with each completed frame
+        /////////////////////////////////////////////////////////////////
+        //
+        // totalScore = 0;
+        // score.forEach(score => {
+        //     totalScore += score;
+        // })
+        ////////////////////////////////////////////////////////////////
     })
 
     // Calculate total score for all frames
