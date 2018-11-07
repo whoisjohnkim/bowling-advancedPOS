@@ -27,43 +27,81 @@ const returnValue = (val) => {
 //        Second array represents the two possible throws per array
 // Output: Final Score as Int
 const calculateScore = (arr) => {
-    let score = 0;
+    let strike = false;
+    let twoStrikes = false;
+    let spare = false;
+    let score = [];
+    let totalScore = 0;
     arr.forEach((frame, i) => {
         let frameScore = 0;
-        // Only score 10 frames
-        if(i < 10){
+        if(i < 11){
             // Case: Strike
-            //       Score of frame is 10 + value of next two throws
-            if(frame[0] === 'X' || returnValue(frame[0]) === 10){
-                frameScore += 10;
-                const nextFrame = arr[i + 1];
-                if(nextFrame[0] === 'X' || returnValue(nextFrame[0]) === 10){
-                    frameScore += 10;
-                    frameScore += returnValue(arr[i + 2][0]);
+            if(frame.length === 1){
+                frameScore = returnValue(frame[0]);
 
+                // Checks if previous two frames were both strikes
+                if(twoStrikes === true){
+                    score[i - 2] += frameScore;
                 }
-                else if(nextFrame[1] === '/' || returnValue(frame[0]) + returnValue(frame[1]) === 10){
-                    frameScore += 10;
+
+                // If previous frame was a strike or spare
+                if(strike === true){
+                    score[i - 1] += frameScore;
+                    twoStrikes = true;
                 }
-                else {
-                    frameScore += returnValue(nextFrame[0]) + returnValue(nextFrame[1]);
+                else if(spare === true){
+                    score[i - 1] += frameScore;
                 }
+                strike = true;
             }
-            // Case: Spare
-            //       Score of frame is 10 + value of next throw
-            else if(frame[1] === '/' || returnValue(frame[0]) + returnValue(frame[1]) === 10){
-                frameScore += 10;
-                frameScore += returnValue(arr[i + 1][0]);
+            // Case: Spare or Open Frame
+            else{
+                if(frame[1] === '/'){
+                    frameScore = 10;
+                }
+                else{
+                    frameScore = returnValue(frame[0]) + returnValue(frame[1]);
+                }
+
+                // Checks if previous frame was a strike or spare
+                if(strike === true){
+                    score[i - 1] += frameScore;
+                }
+                else if(spare === true){
+                    score[i - 1] += returnValue(frame[0]);
+                }
+
+                // Checks if previous two frames were both strikes
+                if(twoStrikes === true){
+                    score[i - 2] += returnValue(frame[0]);
+                }
+
+                // Check to see if current frame is spare
+                if(frameScore === 10){
+                    spare = true;
+                }
+                else{
+                    spare = false;
+                }
+
+                strike = false;
+                twoStrikes = false;
             }
-            // Case: Open Frame
-            //       Score of frame is total pins for the frame
-            else {
-                frameScore += returnValue(frame[0]) + returnValue(frame[1]);
+            if(i < 10){
+                score.push(frameScore);
             }
-            score += frameScore;
+        }
+        // If it's the 3rd throw in the 10th frame
+        else{
+            score[i - 2] += returnValue(frame[0]);
         }
     })
-    return score;
+
+    // Calculate total score for all frames
+    score.forEach(score => {
+        totalScore += score;
+    })
+    return totalScore;
 }
 
 describe('Bowling Tests', () => {
